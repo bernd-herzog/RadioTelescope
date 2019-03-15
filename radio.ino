@@ -31,7 +31,6 @@ void setup() {
 	driver.beginSerial(115200);
 	// Push at the start of setting up the driver resets the register to default
 	driver.push();
-	// Prepare pins
 
 	pinMode(EN_PIN, OUTPUT);
 	pinMode(STEP_PIN, OUTPUT);
@@ -55,21 +54,14 @@ void setup() {
 		Serial.println("Connection OK");
 	}
 
-	//digitalWrite(EN_PIN, LOW);    // Enable driver in hardware
-
 	driver.microsteps(256);
 	driver.intpol(true);
 	digitalWrite(EN_PIN, LOW);    // Enable driver in hardware
-
-
 
 	// driver 2
 	driver2.beginSerial(115200);
 	// Push at the start of setting up the driver resets the register to default
 	driver2.push();
-	// Prepare pins
-	//pinMode(EN_PIN, OUTPUT);
-	//pinMode(STEP_PIN, OUTPUT);
 
 	pinMode(EN_PIN2, OUTPUT);
 	pinMode(STEP_PIN2, OUTPUT);
@@ -99,9 +91,6 @@ void setup() {
 	digitalWrite(EN_PIN2, LOW);    // Enable driver in hardware
 }
 
-//int i = 0;
-//bool dir = true;
-
 bool homing = false;
 
 void loop() {
@@ -120,7 +109,6 @@ void loop() {
 		 homing = false;
 		 driver2.shaft(1);
 
-		 //digitalWrite(STEP_PIN, !digitalRead(STEP_PIN));
 		 for (int i = 0; i < 30; i++)
 		 {
 			 digitalWrite(STEP_PIN2, !digitalRead(STEP_PIN2));
@@ -137,56 +125,5 @@ void loop() {
 			delay(50);
 		}
 	}
-
-	//i++;
-
-	/*int o = (i % 300) - 5;
-	if (o < 0)
-		o = -o;*/
-
-	//driver.VACTUAL(10 * (o));
-	//driver.VACTUAL(10);
-	//delay(10);
-	//driver2.VACTUAL(100);
-
-
-	 //digitalWrite(STEP_PIN, !digitalRead(STEP_PIN));
-	 //delay(10);
-
-	 //if (i % 100 == 0) {
-	 //driver.shaft();
-
-	/* uint32_t g;
-	 driver.GCONF(&g);
-	 Serial.println(g);
-
-	 uint32_t data;
-	 driver.DRV_STATUS(&data);
-	 Serial.println(data, BIN);*/
-
-	 //}
-
-	//driver.step();
-	//digitalWrite(STEP_PIN, HIGH);
-	//delay(1);
-	//digitalWrite(STEP_PIN, LOW);
 	delay(10);
-
-	/*uint32_t data;
-	driver.MSCNT(&data);
-	Serial.println(data, DEC);*/
-
-	/*uint32_t ms = millis();
-	 static uint32_t last_time = 0;
-	 if ((ms - last_time) > 2000) {
-	 if (dir) {
-	 Serial.println("Dir -> 0");
-	 driver.shaft(0);
-	 } else {
-	 Serial.println("Dir -> 1");
-	 driver.shaft(1);
-	 }
-	 dir = !dir;
-	 last_time = ms;
-	 }*/
 }
