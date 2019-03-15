@@ -481,7 +481,7 @@ environment/project/io.sloeber.core.toolChain.release.1307862965/JANTJE.PACKAGE_
 environment/project/io.sloeber.core.toolChain.release.1307862965/JANTJE.PACKAGE_ID/value=arduino
 environment/project/io.sloeber.core.toolChain.release.1307862965/JANTJE.PROJECT_NAME/delimiter=;
 environment/project/io.sloeber.core.toolChain.release.1307862965/JANTJE.PROJECT_NAME/operation=replace
-environment/project/io.sloeber.core.toolChain.release.1307862965/JANTJE.PROJECT_NAME/value=arduino_stepper_poc
+environment/project/io.sloeber.core.toolChain.release.1307862965/JANTJE.PROJECT_NAME/value=radio-telescope
 environment/project/io.sloeber.core.toolChain.release.1307862965/JANTJE.SELECTED.PLATFORM/delimiter=;
 environment/project/io.sloeber.core.toolChain.release.1307862965/JANTJE.SELECTED.PLATFORM/operation=replace
 environment/project/io.sloeber.core.toolChain.release.1307862965/JANTJE.SELECTED.PLATFORM/value=${eclipse_home}/arduinoPlugin/packages/arduino/hardware/avr/1.6.23

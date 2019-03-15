@@ -23,6 +23,10 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/arduino_stepper_poc/core/variant}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/arduino_stepper_poc/libraries/TMC2208Stepper/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/arduino_stepper_poc/libraries/SoftwareSerial/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/radio-telescope/core/core}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/radio-telescope/core/variant}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/radio-telescope/libraries/SoftwareSerial/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/radio-telescope/libraries/TMC2208Stepper/src}&quot;"/>
 								</option>
 								<inputType id="io.sloeber.compiler.cpp.sketch.input.1273398234" name="CPP source files" superClass="io.sloeber.compiler.cpp.sketch.input"/>
 							</tool>
@@ -32,6 +36,10 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/arduino_stepper_poc/core/variant}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/arduino_stepper_poc/libraries/TMC2208Stepper/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/arduino_stepper_poc/libraries/SoftwareSerial/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/radio-telescope/core/core}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/radio-telescope/core/variant}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/radio-telescope/libraries/SoftwareSerial/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/radio-telescope/libraries/TMC2208Stepper/src}&quot;"/>
 								</option>
 								<inputType id="io.sloeber.compiler.c.sketch.input.1656947019" name="C Source Files" superClass="io.sloeber.compiler.c.sketch.input"/>
 							</tool>
@@ -41,6 +49,10 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/arduino_stepper_poc/core/variant}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/arduino_stepper_poc/libraries/TMC2208Stepper/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/arduino_stepper_poc/libraries/SoftwareSerial/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/radio-telescope/core/core}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/radio-telescope/core/variant}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/radio-telescope/libraries/SoftwareSerial/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/radio-telescope/libraries/TMC2208Stepper/src}&quot;"/>
 								</option>
 								<inputType id="io.sloeber.compiler.S.sketch.input.378208670" name="Assembly source files" superClass="io.sloeber.compiler.S.sketch.input"/>
 							</tool>

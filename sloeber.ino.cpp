@@ -2,7 +2,7 @@
 //This is a automatic generated file
 //Please do not modify this file
 //If you touch this file your change will be overwritten during the next build
-//This file has been generated on 2019-03-15 21:10:46
+//This file has been generated on 2019-03-15 21:34:57
 
 #include "Arduino.h"
 #define TASTER_PIN    4
@@ -20,6 +20,6 @@ void setup() ;
 void loop() ;
 
 
-#include "Blink.ino"
+#include "radio.ino"
 
 #endif
