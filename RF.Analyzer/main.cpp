@@ -34,6 +34,12 @@ int main(int argc, char** argv)
       sprintf(file_name_buf, "%s/%d-%d.dump", argv[1], x, y);
       
       const auto file_socket = open(file_name_buf, O_RDONLY);
+      if (file_socket <= 0)
+      {
+        printf("could not open %s\n", file_name_buf);
+        return 0;  
+      }
+
       unsigned int len;
 
       float data[1200];
@@ -60,17 +66,16 @@ int main(int argc, char** argv)
         data[freq_start / 5000000] = (dbs[0] + dbs[1] + dbs[2] + dbs[3] + dbs[4]) / 5.0f;
 
         write(file_socket_out, data, sizeof(float) * 1200);
+
       }
 
       close(file_socket);
     }
+
+    printf("written row %d\n", x);
   }
 
-
-
-
   close(file_socket_out);
-
 
   return 0;
 }
