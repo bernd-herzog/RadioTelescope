@@ -9,12 +9,6 @@
 
 //#include <wiringPi.h>
 
-// LED-PIN - wiringPi-PIN 0 ist BCM_GPIO 17.
-// Wir müssen bei der Initialisierung mit wiringPiSetupSys die BCM-Nummerierung verwenden.
-// Wenn Sie eine andere PIN-Nummer wählen, verwenden Sie die BCM-Nummerierung, und
-// aktualisieren Sie die Eigenschaftenseiten – Buildereignisse – Remote-Postbuildereignisbefehl 
-// der den GPIO-Export für die Einrichtung für wiringPiSetupSys verwendet.
-//#define	LED	17
 
 int open_serial();
 
@@ -92,21 +86,26 @@ void do_lane(int serialSocket, bool up)
     while (!gather_data())
       ;
 
-    write(serialSocket, "v", 1);
-    usleep(100000);
-    cur_y += up ? 1 : -1;
-  }
+    if (i != 199)
+    {
+      write(serialSocket, "v", 1);
+      usleep(100000);
+      cur_y += up ? 1 : -1;
+    }
+    else // last
+    {
+      for (int i = 0; i < 2; i++)
+      {
+        write(serialSocket, "h", 1);
+        usleep(100000);
+      }
 
-  for (int i = 0; i < 2; i++)
-  {
-    write(serialSocket, "h", 1);
-    usleep(100000);
+      cur_x++;
+    }
   }
-
-  cur_x++;
 }
 
-int main()
+int main(int argc, char **argv)
 {
   int serialSocket = open_serial();
 
