@@ -9,44 +9,65 @@
 
 int main(int argc, char** argv)
 {
-  if (argc < 3)
+  if (argc != 5)
   {
-    printf("Please specify a file.\n");
+    printf("Usage: <input directory> <width> <height> <output file>\n");
     return 0;
   }
 
-  const auto file_socket = open(argv[1], O_RDONLY);
-  unsigned int len;
+  const auto file_socket_out = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC);
 
-  float data[1200];
+  int width = 0;
+  int height = 0;
 
-  while (true)
+  sscanf(argv[2], "%d", &width);
+  sscanf(argv[3], "%d", &height);
+
+  write(file_socket_out, &width, sizeof(int));
+  write(file_socket_out, &height, sizeof(int));
+
+  for (int x = 0; x < width; x++)
   {
-    const auto bytes_read = read(file_socket, &len, sizeof(len));
+    for (int y = 0; y < height; y++)
+    {
+      char file_name_buf[300];
+      sprintf(file_name_buf, "%s/%d-%d.dump", argv[1], x, y);
+      
+      const auto file_socket = open(file_name_buf, O_RDONLY);
+      unsigned int len;
 
-    if (bytes_read <= 0)
-      break;
+      float data[1200];
 
-    if (len != 36)
-      break;
+      while (true)
+      {
+        const auto bytes_read = read(file_socket, &len, sizeof(len));
 
-    long unsigned long freq_start, freq_end;
-    read(file_socket, &freq_start, sizeof(freq_start));
-    read(file_socket, &freq_end, sizeof(freq_end));
+        if (bytes_read <= 0)
+          break;
 
-    float dbs[5];
-    read(file_socket, dbs, sizeof(float) * 5);
+        if (len != 36)
+          break;
 
-    //printf("%llu %llu %f\n", freq_start/ 5000000, freq_end / 5000000, (dbs[0] + dbs[1] + dbs[2] + dbs[3] + dbs[4]) / 5.0f);
+        long unsigned long freq_start, freq_end;
+        read(file_socket, &freq_start, sizeof(freq_start));
+        read(file_socket, &freq_end, sizeof(freq_end));
 
-    data[freq_start / 5000000] = (dbs[0] + dbs[1] + dbs[2] + dbs[3] + dbs[4]) / 5.0f;
+        float dbs[5];
+        read(file_socket, dbs, sizeof(float) * 5);
+
+        //printf("%llu %llu %f\n", freq_start/ 5000000, freq_end / 5000000, (dbs[0] + dbs[1] + dbs[2] + dbs[3] + dbs[4]) / 5.0f);
+
+        data[freq_start / 5000000] = (dbs[0] + dbs[1] + dbs[2] + dbs[3] + dbs[4]) / 5.0f;
+
+        write(file_socket_out, data, sizeof(float) * 1200);
+      }
+
+      close(file_socket);
+    }
   }
 
-  close(file_socket);
 
-  const auto file_socket_out = open(argv[2], O_WRONLY | O_CREAT | O_TRUNC);
 
-  write(file_socket_out, data, sizeof (float) * 1200);
 
   close(file_socket_out);
 
