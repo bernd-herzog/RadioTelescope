@@ -1,6 +1,7 @@
 package de.nachregenkommtsonne.rf.telescope;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
@@ -17,9 +18,19 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.GZIPInputStream;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -57,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         final List<String> result = new ArrayList<>();
 
         for (String entry : stringArrayList) {
-            if (entry.endsWith("tbz"))
+            if (entry.endsWith("rfi.gz"))
                 result.add(entry);
         }
 
@@ -75,7 +86,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String file = result.get(position);
-
+                Intent intent = new Intent(MainActivity.this, RadioImageActivity.class);
+                intent.putExtra("filename", file);
+                startActivity(intent);
             }
         });
     }
