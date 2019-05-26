@@ -6,14 +6,26 @@
 #include <termios.h> /* POSIX terminal control definitions */
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <sys/stat.h>
 
 //#include <wiringPi.h>
 
+  // 1 => 25
+  // 4 => 100
+  // 8 => 200
+int movespeedy = 1;
+
+// 1 => 200
+// 2 => 100
+// 4 => 50
+// 8 => 25
+int movespeedx = 8;
+
 
 int open_serial();
+long int findSize(const char* file_name);
 
 int cur_x = 0;
-int cur_y = 0;
 
 void initTelescope(int serialSocket)
 {
@@ -23,9 +35,9 @@ void initTelescope(int serialSocket)
 
   //TODO: wait for HOMED
 
-  write(serialSocket, "d", 1);
+  write(serialSocket, "u", 1);
 
-  for (int i = 0; i < 120; i++)
+  for (int i = 0; i < 80; i++)
   {
     write(serialSocket, "v", 1);
     usleep(100000);
@@ -34,79 +46,178 @@ void initTelescope(int serialSocket)
   sleep(1);
 }
 
-bool gather_data()
+int gather_data()
 {
   int pid = fork();
 
   if (pid == 0) // new process
   {
     char filename[80];
-    sprintf(filename, "./%d-%d.dump", cur_x, cur_y);
+    sprintf(filename, "./%d.dump", cur_x);
 
     int fd = open(filename, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
     dup2(fd, 1);
     close(fd);
 
-    execl("/usr/bin/hackrf_sweep", "hackrf_sweep", "-1", "-B", (char *)NULL);
-    //execl("/bin/echo", "echo", "echotest", "-1", "-B", (char *)NULL);
-    return false;
+    execl("/usr/bin/hackrf_sweep", "hackrf_sweep", "-B", (char *)NULL);
+    _exit(1);
+    // does not return
+    return 0;
   }
   else // main process
   {
-    int status = 0;
-    int pid2;
+    return pid;
 
-    for (int i = 0; i < 50; i++)
-    {
-      pid2 = waitpid(pid, &status, WNOHANG);
-
-      if (pid2 != 0)
-        return true;
-
-      usleep(100000);
-    }
-
-    kill(pid, SIGTERM);
-    usleep(100000);
-
-    return false;
+    // move to end
+    
   }
 
-  printf("x: %d\ty: %d\n", cur_x, cur_y);
+  printf("x: %d\n", cur_x);
 }
 
-void do_lane(int serialSocket, bool up)
+void stop_gather(int pid)
 {
-  const char* direction = up ? "u" : "d";
+  //int status = 0;
+  //int pid2;
 
-  write(serialSocket, direction, 1);
+  //for (int i = 0; i < 50; i++)
+  //{
+  //  pid2 = waitpid(pid, &status, WNOHANG);
+
+  //  if (pid2 != 0)
+  //    return true;
+
+  //  usleep(100000);
+  //}
+
+  kill(pid, SIGTERM);
+  usleep(100000);
+}
+
+bool do_lane(int serialSocket)
+{
+  //const char* direction = up ? "u" : "d";
+
+  write(serialSocket, "d", 1);
+  usleep(100000);
+
+  int pid = gather_data();
 
   for (int i = 0; i < 200; i++)
   {
-    while (!gather_data())
-      ;
-
-    if (i != 199)
-    {
-      write(serialSocket, "v", 1);
-      usleep(100000);
-      cur_y += up ? 1 : -1;
-    }
-    else // last
-    {
-      for (int i = 0; i < 2; i++)
-      {
-        write(serialSocket, "h", 1);
-        usleep(100000);
-      }
-
-      cur_x++;
-    }
+    write(serialSocket, "v", 1);
+    usleep(movespeedy * 100000);
   }
+
+  stop_gather(pid);
+
+  write(serialSocket, "u", 1);
+  usleep(100000);
+
+  for (int i = 0; i < 200; i++)
+  {
+    write(serialSocket, "v", 1);
+    usleep(25000);
+  }
+
+  //if (i != 199)
+  //{
+  //  write(serialSocket, "v", 1);
+  //  usleep(100000);
+  //  cur_y += up ? 1 : -1;
+  //}
+  //else // last
+  //{
+  //  for (int i = 0; i < 2; i++)
+  //  {
+  //    write(serialSocket, "h", 1);
+  //    usleep(100000);
+  //  }
+
+  //  ;
+  //}
+
+  char filename[80];
+  sprintf(filename, "./%d.dump", cur_x);
+
+  if (findSize(filename) == 0)
+  {
+    return false;
+  }
+
+
+  for (int i = 0; i < movespeedx; i++)
+  {
+    write(serialSocket, "h", 1);
+    usleep(500000);
+  }
+
+  cur_x++;
+
+  return true;
+}
+
+long int findSize(const char* file_name)
+{
+  struct stat st; /*declare stat variable*/
+
+  /*get the size using stat()*/
+
+  if (stat(file_name, &st) == 0)
+    return (st.st_size);
+  else
+    return -1;
 }
 
 int main(int argc, char **argv)
 {
+  if (argc != 2)
+  {
+    printf("Usage: <resolution>\n");
+    printf("1 => 200\n");
+    printf("2 => 100\n");
+    printf("4 => 50\n");
+    printf("8 => 25\n");
+
+    return 0;
+  }
+
+  int resolution = 0;
+
+  sscanf(argv[1], "%d", &resolution);
+
+  switch (resolution)
+  {
+  case 8:
+    movespeedy = 1;
+    movespeedx = 8;
+    break;
+
+  case 4:
+    movespeedy = 2;
+    movespeedx = 4;
+    break;
+
+  case 2:
+    movespeedy = 4;
+    movespeedx = 2;
+    break;
+
+  case 1:
+    movespeedy = 8;
+    movespeedx = 1;
+    break;
+
+  default:
+    printf("Usage: <resolution>\n");
+    printf("1 => 200\n");
+    printf("2 => 100\n");
+    printf("4 => 50\n");
+    printf("8 => 25\n");
+
+    return 0;
+  }
+
   int serialSocket = open_serial();
 
   if (serialSocket == -1)
@@ -118,9 +229,9 @@ int main(int argc, char **argv)
   {
     initTelescope(serialSocket);
 
-    for (int i = 0; i < 100; i++) {
-      do_lane(serialSocket, true);
-      do_lane(serialSocket, false);
+    for (int i = 0; i < (200/ movespeedx); i++) {
+      while (!do_lane(serialSocket))
+        ;
     }
 
     close(serialSocket);

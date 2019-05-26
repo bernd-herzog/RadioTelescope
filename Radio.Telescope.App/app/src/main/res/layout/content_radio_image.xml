@@ -10,17 +10,33 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="380dp"
-        android:layout_height="380dp"
+        android:layout_width="395dp"
+        android:layout_height="395dp"
         app:srcCompat="@mipmap/ic_launcher"
-        tools:layout_editor_absoluteX="24dp"
+        tools:layout_editor_absoluteX="8dp"
         tools:layout_editor_absoluteY="16dp" />
 
     <SeekBar
-        android:id="@+id/seekBar"
-        android:layout_width="321dp"
+        android:id="@+id/seekBarFrequency"
+        android:layout_width="395dp"
         android:layout_height="32dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintTop_toBottomOf="@+id/imageView"
-        tools:layout_editor_absoluteX="45dp" />
+        tools:layout_editor_absoluteX="8dp" />
+
+    <SeekBar
+        android:id="@+id/seekBarBandWidth"
+        android:layout_width="395dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="6dp"
+        app:layout_constraintTop_toBottomOf="@+id/seekBarFrequency"
+        tools:layout_editor_absoluteX="8dp" />
+
+    <SeekBar
+        android:id="@+id/seekBarExposure"
+        android:layout_width="395dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="6dp"
+        app:layout_constraintTop_toBottomOf="@+id/seekBarBandWidth"
+        tools:layout_editor_absoluteX="8dp" />
 </android.support.constraint.ConstraintLayout>

@@ -30,22 +30,29 @@ int main(int argc, char** argv)
 
   for (int x = 0; x < width; x++)
   {
-    for (int y = 0; y < height; y++)
+    char file_name_buf[300];
+    sprintf(file_name_buf, "%s/%d.dump", argv[1], x);
+
+    const auto file_socket = open(file_name_buf, O_RDONLY);
+    if (file_socket <= 0)
     {
-      char file_name_buf[300];
-      sprintf(file_name_buf, "%s/%d-%d.dump", argv[1], x, y);
-      
-      const auto file_socket = open(file_name_buf, O_RDONLY);
-      if (file_socket <= 0)
-      {
-        printf("could not open %s\n", file_name_buf);
-        return 0;  
-      }
+      printf("could not open %s\n", file_name_buf);
+      return 0;
+    }
 
-      printf("parsing file %s\n", file_name_buf);
-
+    printf("parsing file %s\n", file_name_buf);
+    
+    //for (int y = 0; y < height; y++)
+    {
       unsigned int len;
       float data[1200];
+      for (size_t i = 0; i < 1200; i++)
+      {
+        data[i] = 0.0f;
+      }
+
+      int i = 0;
+      int y = 0;
 
       while (true)
       {
@@ -65,15 +72,49 @@ int main(int argc, char** argv)
         read(file_socket, dbs, sizeof(float) * 5);
 
         //printf("%llu %llu %f\n", freq_start/ 5000000, freq_end / 5000000, (dbs[0] + dbs[1] + dbs[2] + dbs[3] + dbs[4]) / 5.0f);
+        if (data[freq_start / 5000000] != 0.0f)
+        {
+          write(file_socket_out, data, sizeof(float) * 1200);
+          
+          if (i != 1200)
+          {
+            printf("missing data: %d\n", i);
+          }
+
+          y++;
+
+          if (y == height)
+          {
+            break;
+          }
+
+          i = 0;
+
+          for (size_t j = 0; j < 1200; j++)
+          {
+            data[j] = 0.0f;
+          }
+
+        }
 
         data[freq_start / 5000000] = (dbs[0] + dbs[1] + dbs[2] + dbs[3] + dbs[4]) / 5.0f;
-
-        write(file_socket_out, data, sizeof(float) * 1200);
+        i++;
       }
 
-      close(file_socket);
+      if (i != 1200)
+      {
+        printf("missing data: %d\n", i);
+
+      }
+        
+      printf("got: %d pixels\n", y);
+
+
+      write(file_socket_out, data, sizeof(float) * 1200);
+
     }
 
+    close(file_socket);
     printf("finished row %d\n", x);
   }
 
